@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-sea-pdf-preview" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+	<name>SeaPDFPreview</name>
+	<js-module name="SeaPDFPreview" src="www/SeaPDFPreview.js">
+		<clobbers target="cordova.plugins.seaPDFPreview" />
+	</js-module>
+	<platform name="android">
+		<config-file parent="/*" target="res/xml/config.xml">
+			<feature name="SeaPDFPreview">
+				<param name="android-package" value="com.sea.plugins.SeaPDFPreview" />
+			</feature>
+		</config-file>
+		<config-file parent="/manifest/application" target="AndroidManifest.xml">
+			<activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="@string/activity_name" android:launchMode="singleTop"
+	            android:name="com.sea.plugins.SeaPDFActivity" android:theme="@android:style/Theme.DeviceDefault.NoActionBar" android:windowSoftInputMode="adjustResize"
+	            android:screenOrientation="portrait">
+	        </activity>
+		</config-file>
+		<config-file parent="/resources" target="res/values/strings.xml">
+			<string name="sea_pdf_file_name">seaPDFPreviewTemp.pdf</string>
+		</config-file>
+		<source-file src="src/android/res/layout/sea_pdf_activity.xml" target-dir="res/layout"/>
+		<framework src="com.github.barteksc:android-pdf-viewer:2.5.0"/>
+		<source-file src="src/android/SeaPDFPreview.java" target-dir="src/com/sea/plugins" />
+		<source-file src="src/android/SeaPDFActivity.java" target-dir="src/com/sea/plugins" />
+	</platform>
+	<platform name="ios">
+		<config-file parent="/*" target="config.xml">
+			<feature name="SeaPDFPreview">
+				<param name="ios-package" value="SeaPDFPreview" />
+			</feature>
+		</config-file>
+		<header-file src="src/ios/SeaPDFPreview.h" />
+		<source-file src="src/ios/SeaPDFPreview.m" />
+		<header-file src="src/ios/PDFViewController.h" />
+		<source-file src="src/ios/PDFViewController.m" />
+	</platform>
+</plugin>

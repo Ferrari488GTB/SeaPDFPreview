@@ -1,0 +1,26 @@
+{
+  "name": "cordova-plugin-sea-pdf-preview",
+  "version": "1.0.5",
+  "description": "PDF预览插件",
+  "cordova": {
+    "id": "cordova-plugin-sea-preview",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ferrari488GTB/SeaPDFPreview.git"
+  },
+  "keywords": [
+    "Cordova",
+    "PDF",
+    "npm",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Sea Breaze",
+  "license": "ISC",
+  "homepage": "https://github.com/Ferrari488GTB/SeaPDFPreview/tree/master"
+}
