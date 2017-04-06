@@ -3,32 +3,29 @@ package com.sea.plugins;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.github.barteksc.pdfviewer.listener.OnErrorListener;
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
 
 import org.apache.cordova.CordovaInterface;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import io.cordova.hellocordova.R;
 
 /**
  * Created by administrator on 2017/3/31.
  */
 
 public class SeaPDFActivity extends Activity {
+    private Class layoutClass;
+    private Class idClass;
+    private int activityId;
+    private int pdfViewId;
     private static CordovaInterface cordova;
     private static String type;
     private static String filePath;
@@ -39,18 +36,32 @@ public class SeaPDFActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sea_pdf_activity);
-        handler = new Handler();
-        if(type.equals("local")){
-            localPreview();
-        }else if(type.equals("online")){
-            onlinePreview();
+        try {
+            layoutClass = Class.forName(this.getApplicationContext().getPackageName()+".R$layout");
+            activityId = layoutClass.getDeclaredField("sea_pdf_activity").getInt(null);
+            idClass = Class.forName(this.getApplicationContext().getPackageName()+".R$id");
+            pdfViewId = idClass.getDeclaredField("sea_pdf_preview").getInt(null);
+            setContentView(activityId);
+            handler = new Handler();
+            if(type.equals("local")){
+                localPreview();
+            }else if(type.equals("online")){
+                onlinePreview();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            showErrorAlert(e.getMessage());
         }
     }
 
     private  void localPreview(){
-        PDFView pdfView = (PDFView) findViewById(R.id.sea_pdf_preview);
-        pdfView.fromAsset(SeaPDFActivity.filePath+"/"+SeaPDFActivity.fileName+".pdf").load();
+        try{
+            PDFView pdfView = (PDFView) findViewById(pdfViewId);
+            pdfView.fromAsset(SeaPDFActivity.filePath+"/"+SeaPDFActivity.fileName+".pdf").load();
+        }catch(Exception e){
+            e.printStackTrace();
+            showErrorAlert(e.getMessage());
+        }
     }
 
     private void onlinePreview(){
@@ -58,15 +69,9 @@ public class SeaPDFActivity extends Activity {
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                Activity activity = SeaPDFActivity.this;
-                Context context = activity.getApplicationContext();
-                PDFView pdfView = (PDFView) findViewById(R.id.sea_pdf_preview);
+                PDFView pdfView = (PDFView) findViewById(pdfViewId);
                 URL url;
                 URLConnection conn;
-                File file;
-                InputStream is;
-                BufferedInputStream bis;
-                FileOutputStream fos;
                 try {
                     url = new URL(SeaPDFActivity.filePath);
                     conn = url.openConnection();
@@ -76,28 +81,32 @@ public class SeaPDFActivity extends Activity {
                     conn.setDoInput(true);
                     conn.setConnectTimeout(30000);
                     conn.connect();
-                    file = new File(context.getFilesDir(),context.getString(R.string.sea_pdf_file_name));
-                    is = conn.getInputStream();
-                    bis = new BufferedInputStream(is);
-                    fos = new FileOutputStream(file);
-                    int length=0;
-                    int total = 0;
-                    byte[] bytes = new byte[3072];
-                    while((length=bis.read(bytes))!=-1){
-                        fos.write(bytes,0,length);
-                        total+=length;
-                    }
-                    fos.flush();
-                    is.close();
-                    bis.close();
-                    fos.close();
-                    pdfView.fromFile(new File(context.getFilesDir(),context.getString(R.string.sea_pdf_file_name))).load();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideProgressDialog();
-                        }
-                    });
+                    pdfView
+                            .fromStream(conn.getInputStream())
+                            .onLoad(new OnLoadCompleteListener() {
+                                @Override
+                                public void loadComplete(int nbPages) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            hideProgressDialog();
+                                        }
+                                    });
+                                }
+                            })
+                            .onError(new OnErrorListener() {
+                                @Override
+                                public void onError(final Throwable t) {
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SeaPDFActivity.this.hideProgressDialog();
+                                            SeaPDFActivity.this.showErrorAlert(t.getMessage());
+                                        }
+                                    });
+                                }
+                            })
+                            .load();
                 }catch (final Exception e){
                     e.printStackTrace();
                     handler.post(new Runnable() {

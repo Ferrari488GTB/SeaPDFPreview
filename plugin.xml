@@ -16,9 +16,6 @@
 	            android:screenOrientation="portrait">
 	        </activity>
 		</config-file>
-		<config-file parent="/resources" target="res/values/strings.xml">
-			<string name="sea_pdf_file_name">seaPDFPreviewTemp.pdf</string>
-		</config-file>
 		<source-file src="src/android/res/layout/sea_pdf_activity.xml" target-dir="res/layout"/>
 		<framework src="com.github.barteksc:android-pdf-viewer:2.5.0"/>
 		<source-file src="src/android/SeaPDFPreview.java" target-dir="src/com/sea/plugins" />
