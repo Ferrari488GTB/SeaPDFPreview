@@ -35,14 +35,14 @@ cordova.plugins.seaPDFPreview.preview(
     function(errorMsg){
         alert(errorMsg);
     }
-	);
+);
 ```
 ## 在线预览PDF
 ```javascript
 cordova.plugins.seaPDFPreview.preview(
 	{
 		type : "online",
-		filePath : "http://120.27.188.216:21003/Ferrari.pdf"
+		filePath : "http://www.qq.com/abc.pdf"
 	},
 	function(data){
 		myApp.alert(data.code+"---"+data.msg);
