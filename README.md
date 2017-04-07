@@ -10,6 +10,14 @@
 ## 安装方法
 ```javascript
 	cordova plugin add cordova-plugin-sea-pdf-preview
+  	document.addEventListener("deviceready", onDeviceReady, false);
+  	function onDeviceReady() {
+    		console.log(cordova.plugins.seaPDFPreview);
+  	}
+```
+## 安装方法
+```javascript
+  cordova plugin add cordova-plugin-sea-pdf-preview
 ```
 ## 支持平台
 * Android
@@ -39,16 +47,16 @@
 ```
 ## 在线预览PDF
 ```javascript
-    cordova.plugins.seaPDFPreview.preview(
-        {
-            type : "online",
-            filePath : "http://120.27.188.216:21003/Ferrari.pdf"
-        },
-        function(data){
-            myApp.alert(data.code+"---"+data.msg);
-        },
-        function(errorMsg){
-            myApp.alert(errorMsg);
-        }
-    );
+  	cordova.plugins.seaPDFPreview.preview(
+	    {
+	      type : "online",
+	      filePath : "http://120.27.188.216:21003/Ferrari.pdf"
+	    },
+	    function(data){
+	      myApp.alert(data.code+"---"+data.msg);
+	    },
+	    function(errorMsg){
+	      myApp.alert(errorMsg);
+	    }
+  	);
 ```
