@@ -60,6 +60,7 @@ public class SeaPDFActivity extends Activity {
             pdfView.fromAsset(SeaPDFActivity.filePath+"/"+SeaPDFActivity.fileName+".pdf").load();
         }catch(Exception e){
             e.printStackTrace();
+            hideProgressDialog();
             showErrorAlert(e.getMessage());
         }
     }
@@ -86,24 +87,14 @@ public class SeaPDFActivity extends Activity {
                             .onLoad(new OnLoadCompleteListener() {
                                 @Override
                                 public void loadComplete(int nbPages) {
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            hideProgressDialog();
-                                        }
-                                    });
+                                    hideProgressDialog();
                                 }
                             })
                             .onError(new OnErrorListener() {
                                 @Override
-                                public void onError(final Throwable t) {
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            SeaPDFActivity.this.hideProgressDialog();
-                                            SeaPDFActivity.this.showErrorAlert(t.getMessage());
-                                        }
-                                    });
+                                public void onError(Throwable t) {
+                                    hideProgressDialog();
+                                    showErrorAlert(t.getMessage());
                                 }
                             })
                             .load();
@@ -112,8 +103,8 @@ public class SeaPDFActivity extends Activity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            SeaPDFActivity.this.hideProgressDialog();
-                            SeaPDFActivity.this.showErrorAlert(e.getMessage());
+                            hideProgressDialog();
+                            showErrorAlert(e.getMessage());
                         }
                     });
                 }
