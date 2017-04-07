@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-sea-pdf-preview",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "PDF预览插件",
   "cordova": {
     "id": "cordova-plugin-sea-preview",

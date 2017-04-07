@@ -34,7 +34,6 @@ public class SeaPDFActivity extends Activity {
     private static String fileName;
     private Handler handler;
     private ProgressDialog progressDialog;
-    private boolean modal;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,19 +58,16 @@ public class SeaPDFActivity extends Activity {
 
     private  void localPreview(){
         try{
-            modal=false;
             PDFView pdfView = (PDFView) findViewById(pdfViewId);
             pdfView.fromAsset(SeaPDFActivity.filePath+"/"+SeaPDFActivity.fileName+".pdf").load();
         }catch(Exception e){
             e.printStackTrace();
-            modal = true;
             hideProgressDialog();
             showErrorAlert(e.getMessage());
         }
     }
 
     private void onlinePreview(){
-        modal = true;
         showProgressDialog("提示","正在加载，请稍候...");
         cordova.getThreadPool().execute(new Runnable() {
             @Override
@@ -93,7 +89,6 @@ public class SeaPDFActivity extends Activity {
                             .onLoad(new OnLoadCompleteListener() {
                                 @Override
                                 public void loadComplete(int nbPages) {
-                                    modal = false;
                                     hideProgressDialog();
                                 }
                             })
@@ -147,18 +142,9 @@ public class SeaPDFActivity extends Activity {
                 SeaPDFActivity.this.finish();
             }
         });
+        builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK){
-            if(modal){
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode,event);
     }
 
     public static CordovaInterface getCordova() {
