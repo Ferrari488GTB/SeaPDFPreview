@@ -4,16 +4,8 @@
 ```javascript
 	document.addEventListener("deviceready", onDeviceReady, false);
 	function onDeviceReady() {
-        console.log(cordova.plugins.seaPDFPreview);
-    }
-```
-## 安装方法
-```javascript
-	cordova plugin add cordova-plugin-sea-pdf-preview
-  	document.addEventListener("deviceready", onDeviceReady, false);
-  	function onDeviceReady() {
-    		console.log(cordova.plugins.seaPDFPreview);
-  	}
+        	console.log(cordova.plugins.seaPDFPreview);
+    	}
 ```
 ## 安装方法
 ```javascript
