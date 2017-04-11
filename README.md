@@ -11,6 +11,11 @@ function onDeviceReady() {
 ```javascript
 cordova plugin add cordova-plugin-sea-pdf-preview
 ```
+
+## 打包事项
+Android平台由于依赖第三方安装包，需在build.gradle文件中添加cdvBuildMultipleApks = true
+
+
 ## 支持平台
 * Android
 * iOS
